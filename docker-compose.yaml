@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  pg_nestjs:
+    image: postgres:16.2-alpine3.19
+    container_name: postgresql_nestjs
+    volumes:
+      - data_postgresql:/var/lib/postgresql/data
+      - ./backup.sql:/backup.sql
+    ports:
+      - 4545:5432
+    env_file:
+      - ./.env
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+volumes:
+  data_postgresql:
+    driver: local
