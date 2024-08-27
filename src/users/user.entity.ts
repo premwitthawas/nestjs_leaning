@@ -29,6 +29,9 @@ export class User {
   @Column()
   apiKey: string;
 
+  @Column({ nullable: true })
+  phone: string;
+
   @OneToMany(() => Playlist, (playlist) => playlist.user)
   playLists: Playlist[];
 }

@@ -19,6 +19,7 @@ import { PlaylistsModule } from './playlists/playlists.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ArtistsModule } from './artists/artists.module';
+import { SeedModule } from './seed/seed.module';
 const configOptions: ConfigModuleOptions = {
   envFilePath: '.env',
   isGlobal: true,
@@ -46,6 +47,7 @@ const configOptions: ConfigModuleOptions = {
     AuthModule,
     UsersModule,
     ArtistsModule,
+    SeedModule,
   ],
   controllers: [AppController],
   providers: [AppService],
