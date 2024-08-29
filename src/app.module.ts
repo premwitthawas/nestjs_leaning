@@ -9,7 +9,7 @@ import {
   ConfigModuleOptions,
   ConfigService,
 } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { Song } from './songs/song.entity';
 import { Artist } from './artists/artists.entity';
@@ -20,9 +20,11 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ArtistsModule } from './artists/artists.module';
 import { SeedModule } from './seed/seed.module';
+import { validate } from 'env.validation';
 const configOptions: ConfigModuleOptions = {
   envFilePath: '.env',
   isGlobal: true,
+  validate: validate,
 };
 @Module({
   imports: [
@@ -30,17 +32,21 @@ const configOptions: ConfigModuleOptions = {
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get<string>('POSTGRES_HOST'),
-        port: configService.get<number>('POSTGRES_PORT'),
-        username: configService.get<string>('POSTGRES_USER'),
-        password: configService.get<string>('POSTGRES_PASSWORD'),
-        database: configService.get<string>('POSTGRES_DB'),
-        entities: [Song, Artist, User, Playlist],
-        synchronize: true,
-        logger: 'debug',
-      }),
+      useFactory: async (
+        configService: ConfigService,
+      ): Promise<TypeOrmModuleOptions> => {
+        return {
+          type: 'postgres',
+          host: configService.get<string>('POSTGRES_HOST'),
+          port: configService.get<number>('POSTGRES_PORT'),
+          username: configService.get<string>('POSTGRES_USER'),
+          password: configService.get<string>('POSTGRES_PASSWORD'),
+          database: configService.get<string>('POSTGRES_DB'),
+          entities: [Song, Artist, User, Playlist],
+          synchronize: true,
+          logger: 'debug',
+        };
+      },
     }),
     SongsModule,
     PlaylistsModule,

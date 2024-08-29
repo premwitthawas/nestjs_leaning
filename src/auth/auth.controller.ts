@@ -18,8 +18,10 @@ import { JwtAuthGuard } from './jwt-auth.guard';
 import { ValidateTokenDTO } from './dto/tokenvalidate.dto';
 import { UpdateResult } from 'typeorm';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('auth')
+@ApiTags('auth')
 export class AuthController {
   constructor(
     private usersService: UsersService,
@@ -28,6 +30,11 @@ export class AuthController {
 
   @HttpCode(HttpStatus.CREATED)
   @Post('signup')
+  @ApiOperation({ summary: 'Register new user' })
+  @ApiResponse({
+    status: 201,
+    description: 'It wtill return user in the response',
+  })
   signup(@Body() userDTO: CreateUserDTO): Promise<User> {
     return this.usersService.create(userDTO);
   }
